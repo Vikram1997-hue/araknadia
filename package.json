@@ -4,7 +4,7 @@
     "description": "Build your own Bittorrent challenge, from CodeCrafters",
     "main": "main.js",
     "scripts": {
-        "dev": "node app/main.js"
+        "devStart": "node app/main.js"
     },
     "keywords": [
         "build-your-own-x"

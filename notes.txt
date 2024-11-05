@@ -1,12 +1,52 @@
-Bencode (pronounced Bee-encode) is a serialization format used in the BitTorrent protocol. It is used in torrent files and in communication between trackers and peers.
+ARAKNADIA
+
+Bencode (pronounced Bee-encode) is a serialization format used in the BitTorrent protocol. 
+It is used in torrent files and in communication between trackers and peers.
+BASICALLY: is the encoding used by the peer-to-peer file sharing system BitTorrent for storing and transmitting loosely structured data.
 
 Bencode supports four data types:
+  - strings
+  - integers
+  - arrays
+  - dictionaries (associative arrays)
 
-strings
-integers
-arrays
-dictionaries
-In this stage, we'll focus on decoding strings.
+Bencoding is most commonly used in torrent files, and as such is part of the BitTorrent specification. 
 
-Strings are encoded as <length>:<contents>. For example, the string "hello" is encoded as "5:hello".
-Integers are encoded as i<number>e. For example, 52 is encoded as i52e and -52 is encoded as i-52e.
+- Strings are encoded as <length>:<contents>. For example, the string "hello" is encoded as "5:hello".
+- Integers are encoded as i<number>e. For example, 52 is encoded as i52e and -52 is encoded as i-52e.
+- Lists are encoded as l<bencoded_elements>e. For example, ["hello", 52] would be encoded as l5:helloi52ee. Note that there are 
+  no separators between the elements.
+- A dictionary is encoded as d<key1><value1>...<keyN><valueN>e. <key1>, <value1> etc. correspond to the bencoded keys & values. 
+  The keys are sorted in lexicographical order and must be strings. For example, {"hello": 52, "foo":"bar"} would be encoded as
+  d3:foo3:bar5:helloi52ee (note that the keys were reordered).
+
+
+A torrent file (also known as a metainfo file) that contains metadata about files and folders to be distributed, and usually also a 
+list of the network locations of trackers, which are computers that help participants in the system find each other and form efficient 
+distribution groups called swarms. Torrent files normally have the extension .torrent.
+  With the help of a torrent file, one can download small parts of the original file from computers that have already downloaded it. These 
+"peers" allow for downloading of the file in addition to, or in place of, the primary server. A torrent file does not contain the content 
+to be distributed; it only contains information about those files, such as their names, folder structure, sizes, and cryptographic hash values 
+for verifying file integrity.
+  MAIN ADVANTAGE OF TORRENT FILES: The torrent system has been created to ease the load on central servers, as instead of having individual 
+clients fetch files from the server, torrent can crowd-source the bandwidth needed for the file transfer and reduce the time needed to 
+download large files. Many free/freeware programs and operating systems, such as the various Linux distributions offer a torrent download 
+option for users seeking the aforementioned benefits.
+
+TORRENTING IS LEGAL. PIRACY IS NOT.
+There's a difference.
+
+
+contains a bencoded dictionary with the following keys and values:
+- announce:
+  URL to a "tracker", which is a central server that keeps track of peers participating in the sharing of a torrent.
+- info: 
+  A dictionary with keys:
+  - length: size of the file in bytes, for single-file torrents
+  - name: suggested name to save the file / directory as
+  - piece length: number of bytes in each piece
+  - pieces: concatenated SHA-1 hashes of each piece
+  Note: .torrent files contain bytes that aren’t valid UTF-8 characters. If the language you're using treats strings as a sequence of unicode characters (like Python's str), you'll need to use a byte sequence (like Python's bytes) instead.
+
+Note: The info dictionary looks slightly different for multi-file torrents. For this challenge, we'll only implement support for single-file torrents.
+
