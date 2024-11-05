@@ -23,12 +23,12 @@ const decodeBencode = (bencodedValue, valueType = null) => {
       throw new Error("Invalid encoded value");
     }
     return bencodedValue.substr(firstColonIndex + 1);
-  } 
+  }
   
   //integer
   else if (firstElement === 'i' && lastElement === 'e') {
     return +bencodedValue.slice(1, -1);
-  } 
+  }
   
   //list
   else if (firstElement === 'l' && lastElement === 'e') {
@@ -67,7 +67,7 @@ const decodeBencode = (bencodedValue, valueType = null) => {
       i++;
     }
     return ans;
-  } 
+  }
   
   //dictionary
   else if (firstElement === 'd' && lastElement === 'e') {
