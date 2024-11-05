@@ -32,21 +32,32 @@ for verifying file integrity.
 clients fetch files from the server, torrent can crowd-source the bandwidth needed for the file transfer and reduce the time needed to 
 download large files. Many free/freeware programs and operating systems, such as the various Linux distributions offer a torrent download 
 option for users seeking the aforementioned benefits.
+  Once a peer obtains a certain chunk, that chunk is usually immediately made available for download by others in the swarm. In this way, the
+burden on the network is spread among the downloaders, rather than concentrating at a central distribution hub or cluster.
+
 
 TORRENTING IS LEGAL. PIRACY IS NOT.
 There's a difference.
 
 
-contains a bencoded dictionary with the following keys and values:
+A torrent file is a bencoded dictionary with the following keys and values:
 - announce:
-  URL to a "tracker", which is a central server that keeps track of peers participating in the sharing of a torrent.
+  URL to a "tracker" (see PS on BitTorrent tracker below), which is a central server that keeps track of peers participating in the sharing
+of a torrent.
 - info: 
   A dictionary with keys:
   - length: size of the file in bytes, for single-file torrents
   - name: suggested name to save the file / directory as
   - piece length: number of bytes in each piece
   - pieces: concatenated SHA-1 hashes of each piece
-  Note: .torrent files contain bytes that aren’t valid UTF-8 characters. If the language you're using treats strings as a sequence of unicode characters (like Python's str), you'll need to use a byte sequence (like Python's bytes) instead.
+  Note: .torrent files contain bytes that aren’t valid UTF-8 characters. If the language you're using treats strings as a sequence of unicode 
+  characters (like Python's str), you'll need to use a byte sequence (like Python's bytes) instead.
 
-Note: The info dictionary looks slightly different for multi-file torrents. For this challenge, we'll only implement support for single-file torrents.
+
+PS - A BitTorrent tracker is a special type of server that assists in the communication between peers using the BitTorrent protocol.
+In peer-to-peer file sharing, a software client on an end-user PC requests a file, and portions of the requested file residing on peer 
+machines are sent to the client, and then reassembled into a full copy of the requested file. The "tracker" server keeps track of where file 
+copies reside on peer machines, which ones are available at time of the client request, and helps coordinate efficient transmission and 
+reassembly of the copied file.
+
 

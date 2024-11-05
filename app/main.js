@@ -4,6 +4,7 @@ const {
   BencodeType,
 } = require('./utils/enum');
 
+//TODO: create torrents of some of your own products?
 
 const evaluateWord = (word) => {
   if (isNaN(+word))
