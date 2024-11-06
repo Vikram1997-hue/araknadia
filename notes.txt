@@ -44,14 +44,35 @@ A torrent file is a bencoded dictionary with the following keys and values:
 - announce:
   URL to a "tracker" (see PS on BitTorrent tracker below), which is a central server that keeps track of peers participating in the sharing
 of a torrent.
-- info: 
-  A dictionary with keys:
-  - length: size of the file in bytes, for single-file torrents
-  - name: suggested name to save the file / directory as
-  - piece length: number of bytes in each piece
-  - pieces: concatenated SHA-1 hashes of each piece
-  Note: .torrent files contain bytes that aren’t valid UTF-8 characters. If the language you're using treats strings as a sequence of unicode 
-  characters (like Python's str), you'll need to use a byte sequence (like Python's bytes) instead.
+- info:
+  This maps to a dictionary whose keys are very dependent on whether one or more files are being shared:
+  - files: a list of dictionaries each corresponding to a file (only when multiple files are being shared). Each dictionary has the 
+    following keys:
+    - length: size of the file in bytes.
+    - path: a list of strings corresponding to subdirectory names, the last of which is the actual file name
+  - length: size of the file in bytes (only when one file is being shared though)
+  - name: suggested filename where the file is to be saved (if one file)/suggested directory name where the files are to be saved 
+    (if multiple files)
+  - piece length: number of bytes per piece. This is commonly 2^8 KiB = 256 KiB = 2,62,144 B.
+  - pieces: a hash list, i.e., a concatenation of each piece's SHA-1 hash. As SHA-1 returns a 160-bit hash, pieces will be a string 
+    whose length is a multiple of 20 bytes. If the torrent contains multiple files, the pieces are formed by concatenating the files in the 
+    order they appear in the files dictionary (i.e., all pieces in the torrent are the full piece length except for the last piece, which may 
+    be shorter).
+
+[PS - basically, if you have a single file, structure will be -
+
+- announce
+- info:
+    length: size of the file in bytes, for single-file torrents
+    name: suggested name to save the file / directory as
+    piece length: number of bytes in each piece
+    pieces: concatenated SHA-1 hashes of each piece
+]
+
+All strings must be UTF-8 encoded, except for pieces, which contains binary data.
+
+A torrent is uniquely identified by an infohash, a SHA-1 hash calculated over the contents of the info dictionary in bencode form. Any changes 
+to other portions of the torrent do not affect the hash
 
 
 PS - A BitTorrent tracker is a special type of server that assists in the communication between peers using the BitTorrent protocol.
