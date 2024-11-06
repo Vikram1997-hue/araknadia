@@ -211,6 +211,13 @@ function main() {
     const infoHash = calculateSHA1(tmpBuff);
 
     console.log('Infohash:', infoHash);
+    console.log('Piece Length:', bencodedValue?.info?.['piece length']);
+    //NOTE: each pieces hash will be 40 characters long. read notes.txt for more
+    const pieceInfo = Buffer.from(bencodedValue?.info?.pieces, 'binary');
+    console.log('Piece Hashes:');
+    for (let i = 0; i < pieceInfo.length; i += 20) {
+      console.log(pieceInfo.subarray(i, i + 20).toString("hex"));
+    }
   } else {
     throw new Error(`Unknown command ${command}`);
   }
