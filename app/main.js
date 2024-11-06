@@ -1,6 +1,13 @@
 const fs = require('fs');
+const crypto = require("crypto");
 
 //TODO: create torrents of some of your own products?
+
+const calculateSHA1 = (inputString) => {
+  const sha1Hash = crypto.createHash("sha1");
+  sha1Hash.update(inputString);
+  return sha1Hash.digest("hex");
+}
 
 
 class Bencode {
@@ -144,7 +151,6 @@ class Torrent {
 }
 
 const test = (bencodedStr) => {
-  console.log("BENCODED STR--->", bencodedStr)
   const testObj = {
     name: 'John',
     age: 18,
@@ -200,6 +206,11 @@ function main() {
     console.log("FINAL ANS--->", JSON.stringify(bencodedValue, null, 2));
     console.log('Tracker URL:', bencodedValue?.announce);
     console.log('Length:', bencodedValue?.info?.length);
+
+    const tmpBuff = Buffer.from(Bencode.encode(bencodedValue.info), 'binary');
+    const infoHash = calculateSHA1(tmpBuff);
+
+    console.log('Infohash:', infoHash);
   } else {
     throw new Error(`Unknown command ${command}`);
   }
